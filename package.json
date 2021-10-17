@@ -1,0 +1,17 @@
+{
+  "name": "camTest",
+  "version": "0.0.0",
+  "description": "",
+  "main": "test1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "image-decode": "^1.2.2",
+    "pi-camera-connect": "^0.3.4",
+    "socket.io": "^4.3.1"
+  }
+}
