@@ -13,7 +13,14 @@ class HttpServer {
         this.port = 8080;
         this.app = express();
         this.server = http.createServer(this.app);
-        this.io = new Server(this.server);
+        this.io = new Server(this.server, {
+            cors: {
+              origin: "http://192.168.1.9:8080",
+              methods: ["GET", "POST"]
+            }
+          });
+
+          this.sockets = [];
     }
 
     start() {
@@ -21,9 +28,14 @@ class HttpServer {
 
         this.io.on("connection", (socket) => {
             console.log("a user connected");
-            socket.emit("connected");
+            // socket.emit("connected");
+            this.sockets.push(socket);
             socket.on("disconnect", () => {
                 console.log("user disconnected");
+                // delete this.sockets[socket];
+                this.sockets = array.filter(function(value, index, arr){ 
+                    return value !== socket;
+                });
             });
         });
 
@@ -33,7 +45,11 @@ class HttpServer {
     }
 
     sendSocketMessage(messageKey, messageData) {
-        this.io.emit(messageKey, messageData);
+        // this.io.emit(messageKey, messageData);
+        for(let i=0; i<this.sockets.length; i++) {
+            const socket = this.sockets[i];
+            socket.volatile.emit(messageKey, messageData)
+        }
     }
 }
 

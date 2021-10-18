@@ -8,25 +8,60 @@
             padding: 0;
             margin: 0;
         }
-
+        .eyesRow {
+            display: flex;
+            flex-direction: row;
+            width: 100vw;
+        }
+        img {
+            width: 720px;
+            height: 480px;
+        }
     </style>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io();
+        const leftEyeSocket = io("ws://192.168.1.9:8080");
+        const rightEyeSocket = io("ws://192.168.1.10:8080");
+        let leftEyeImgData = null;
+        let rightEyeImgData = null;
         
-        socket.on('frame', function (msg) {
-            var arrayBufferView = new Uint8Array( msg );
+        leftEyeSocket.on('frame', function (msg) {
+            leftEyeImgData = msg;
+        });
+
+        rightEyeSocket.on('frame', function (msg) {
+            rightEyeImgData = msg;
+        });       
+        
+        const updateImages = () => {
+            writeImgData(leftEyeImgData, 'leftImg');
+            writeImgData(rightEyeImgData, 'rightImg');
+            setTimeout(() => {
+                updateImages();
+            }, 30);
+        }
+
+        const writeImgData = (data, imgId) => {
+            var arrayBufferView = new Uint8Array(data);
             var blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
             var urlCreator = window.URL || window.webkitURL;
             var imageUrl = urlCreator.createObjectURL( blob );
-            var imgTag = document.getElementById('testImg')
-            imgTag.src = imageUrl;
-        });
+            var imgTag = document.getElementById(imgId)
+            imgTag.src = imageUrl;            
+        }
+
+        window.requestAnimationFrame(() => {
+            updateImages();
+        })
+
     </script>
 </head>
 
 <body>
-    <img src="frame.jpg" id='testImg'/>
+    <div class="eyesRow">
+        <img src="frame.jpg" id='rightImg'/>
+        <img src="frame.jpg" id='leftImg'/>
+    </div>
 </body>
 
 </html>

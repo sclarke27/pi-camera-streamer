@@ -28,8 +28,8 @@ class CameraStream {
     start() {
         this.streamCamera = new StreamCamera({
             codec: Codec.MJPEG,
-            width: 1920/2,
-            height: 1080/2,
+            width: 960,
+            height: 720,
             rotation: 270    
         });
         this.streamCamera.startCapture()

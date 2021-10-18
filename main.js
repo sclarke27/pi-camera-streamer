@@ -4,7 +4,7 @@ const CameraStream = require('./CameraStream');
 class Main {
     constructor() {
         this.httpServer = null;
-        this.loopIntervalTimeout = 15;
+        this.loopIntervalTimeout = 34;
         this.loopInterval = null;
         this.leftEyeStream = null;
     }
