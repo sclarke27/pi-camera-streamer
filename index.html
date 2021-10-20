@@ -14,34 +14,35 @@
             width: 100vw;
         }
         img {
-            width: 720px;
-            height: 480px;
+            width: calc(1280px/2);
+            height: calc(720px/2);
         }
     </style>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const leftEyeSocket = io("ws://192.168.1.9:8080");
-        const rightEyeSocket = io("ws://192.168.1.10:8080");
+        // const rightEyeSocket = io("ws://192.168.1.10:8080");
         let leftEyeImgData = null;
         let rightEyeImgData = null;
         
-        leftEyeSocket.on('frame', function (msg) {
+        leftEyeSocket.on('frame', (msg) => {
             leftEyeImgData = msg;
         });
 
-        rightEyeSocket.on('frame', function (msg) {
-            rightEyeImgData = msg;
-        });       
+        // rightEyeSocket.on('frame', (msg) => {
+        //     rightEyeImgData = msg;
+        // });       
         
         const updateImages = () => {
             writeImgData(leftEyeImgData, 'leftImg');
             writeImgData(rightEyeImgData, 'rightImg');
             setTimeout(() => {
                 updateImages();
-            }, 30);
+            }, 17);
         }
 
         const writeImgData = (data, imgId) => {
+            if(!data) return;
             var arrayBufferView = new Uint8Array(data);
             var blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
             var urlCreator = window.URL || window.webkitURL;

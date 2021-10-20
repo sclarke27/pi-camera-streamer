@@ -1,12 +1,6 @@
 const express = require("express");
-// const app = express();
-// const decode = require("image-decode");
-const { StreamCamera, Codec } = require("pi-camera-connect");
 const http = require("http");
-// const server = http.createServer(app);
 const { Server } = require("socket.io");
-// const io = new Server(server);
-// const port = 8080;
 
 class HttpServer {
     constructor() {
@@ -31,11 +25,10 @@ class HttpServer {
             // socket.emit("connected");
             this.sockets.push(socket);
             socket.on("disconnect", () => {
-                console.log("user disconnected");
-                // delete this.sockets[socket];
-                this.sockets = array.filter(function(value, index, arr){ 
+                this.sockets = this.sockets.filter(function(value, index, arr){ 
                     return value !== socket;
                 });
+                console.log("user disconnected", this.sockets.length);
             });
         });
 

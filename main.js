@@ -4,25 +4,24 @@ const CameraStream = require('./CameraStream');
 class Main {
     constructor() {
         this.httpServer = null;
-        this.loopIntervalTimeout = 34;
+        this.loopIntervalTimeout = 17;
         this.loopInterval = null;
-        this.leftEyeStream = null;
+        this.cameraStream = null;
     }
 
     start() {
         this.httpServer = new HttpServer();
         this.httpServer.start();
 
-        this.leftEyeStream = new CameraStream();
-        this.leftEyeStream.start();
+        this.cameraStream = new CameraStream();
+        this.cameraStream.start();
 
         this.main();
     }
 
     main() {
         this.loopInterval = setTimeout(() => {
-            this.leftEyeStream.capture().then((data) => {
-                // console.info(data);
+            this.cameraStream.capture().then((data) => {
                 this.httpServer.sendSocketMessage('frame', data)
             })
             this.main();

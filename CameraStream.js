@@ -1,4 +1,4 @@
-const { StreamCamera, Codec } = require("pi-camera-connect");
+const { StreamCamera, Codec, ExposureMode } = require("pi-camera-connect");
 // let decode = require('image-decode')
 // const runApp = async () => {
     
@@ -28,7 +28,8 @@ class CameraStream {
     start() {
         this.streamCamera = new StreamCamera({
             codec: Codec.MJPEG,
-            width: 960,
+            exposureMode: ExposureMode.Night,
+            width: 1280,
             height: 720,
             rotation: 270    
         });
