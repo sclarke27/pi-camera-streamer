@@ -9,7 +9,7 @@ class HttpServer {
         this.server = http.createServer(this.app);
         this.io = new Server(this.server, {
             cors: {
-              origin: "http://192.168.1.9:8080",
+              origin: "http://192.168.1.16:8080",
               methods: ["GET", "POST"]
             }
           });

@@ -1,43 +1,44 @@
 const { StreamCamera, Codec, ExposureMode } = require("pi-camera-connect");
-// let decode = require('image-decode')
-// const runApp = async () => {
-    
-//     const image = await streamCamera.takeImage();
-//     let {data, width, height} = decode(image) 
-
-//     console.info('write image', data);
-
-//     frameNumber++;
-//     setTimeout(() => {
-//         runApp();
-//     },1)
-    
-// };
-
-
-
-// streamCamera.startCapture().then(() => {
-//     runApp();
-// });
 
 class CameraStream {
     constructor() {
         this.streamCamera = null;
+        this.main = null;
+        this.latestImg = null;
     }
 
-    start() {
+    start(main = null) {
+        this.main = main;
         this.streamCamera = new StreamCamera({
             codec: Codec.MJPEG,
-            exposureMode: ExposureMode.Night,
+            exposureMode: ExposureMode.AntiShake,
             width: 1280,
-            height: 720,
-            rotation: 270    
+            height: 1024,
+            rotation: 90    
         });
         this.streamCamera.startCapture()
+        this.loop();
     }
 
     async capture() {
         return await this.streamCamera.takeImage();
+    }
+
+    loop() {
+        if(this.main !== null) {
+            this.capture().then((imgData) => {
+                this.latestImg = imgData;
+                if(this.latestImg) {
+                    this.main.pushImage(this.latestImg);
+                }
+    
+            })
+        }
+
+
+        setTimeout(() => {
+            this.loop();
+        },17)
     }
 }
 
